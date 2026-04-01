@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,9 +19,8 @@ public class TrainApp {
         passengerBogies.add("Sleeper");
         passengerBogies.add("AC Chair");
         passengerBogies.add("First Class");
-        System.out.println("Current Bogies: " + passengerBogies);
         passengerBogies.remove("AC Chair");
-        System.out.println("After removing AC Chair: " + passengerBogies);
+        System.out.println("Current Bogie List: " + passengerBogies);
 
 
         // --- UC3: HashSet (Unique Bogie IDs) ---
@@ -29,28 +29,33 @@ public class TrainApp {
         bogieIds.add("BG101");
         bogieIds.add("BG102");
         bogieIds.add("BG101"); // Duplicate ignored
-        System.out.println("Unique IDs Registered: " + bogieIds);
+        System.out.println("Unique IDs (Unordered): " + bogieIds);
 
 
-        // --- UC4: LinkedList (Maintaining Physical Order) ---
+        // --- UC4: LinkedList (Physical Chaining) ---
         System.out.println("\n--- UC4: Physical Train Chaining (LinkedList) ---");
-
         LinkedList<String> trainSequence = new LinkedList<>();
-
         trainSequence.add("Engine");
         trainSequence.add("Sleeper");
-        trainSequence.add("AC");
         trainSequence.add("Cargo");
-        trainSequence.add("Guard");
-        System.out.println("Initial Sequence: " + trainSequence);
+        trainSequence.add(1, "Pantry Car"); // Insert in middle
+        System.out.println("Ordered Sequence: " + trainSequence);
 
-        trainSequence.add(2, "Pantry Car");
-        System.out.println("After adding Pantry Car at index 2: " + trainSequence);
 
-        trainSequence.removeFirst();
-        trainSequence.removeLast();
+        // --- UC5: LinkedHashSet (Ordered Uniqueness) ---
+        System.out.println("\n--- UC5: Preserve Insertion Order (LinkedHashSet) ---");
 
-        System.out.println("Final Ordered Train Consist: " + trainSequence);
-        System.out.println("System integrity and physical order verified.");
+        Set<String> trainFormation = new LinkedHashSet<>();
+
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
+
+        System.out.println("Attempting to re-attach duplicate: Sleeper...");
+        trainFormation.add("Sleeper");
+
+        System.out.println("Final Formation Order: " + trainFormation);
+        System.out.println("Integrity Check: No duplicates allowed, order preserved.");
     }
 }
