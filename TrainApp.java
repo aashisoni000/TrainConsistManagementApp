@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 // UC7: Supporting Class for Object-based collection handling
 class Bogie {
@@ -90,6 +91,22 @@ public class TrainApp {
             System.out.println(b);
         }
 
-        System.out.println("\nOperational planning complete. Program continues...");
+
+        // --- UC8: Filter Passenger Bogies Using Streams ---
+        System.out.println("\n--- UC8: Filter Bogies (Capacity > 60) Using Streams ---");
+
+        List<Bogie> filteredBogies = passengerBogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        System.out.println("Filtered Bogies (High Capacity Only):");
+        if (filteredBogies.isEmpty()) {
+            System.out.println("No bogies match the criteria.");
+        } else {
+            filteredBogies.forEach(System.out::println);
+        }
+
+        System.out.println("\nFiltering complete. Original collection remains unchanged.");
+        System.out.println("Operational planning complete. Program continues...");
     }
 }
