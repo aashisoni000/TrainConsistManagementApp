@@ -81,7 +81,7 @@ public class TrainApp {
 
         List<Bogie> passengerBogies = new ArrayList<>();
         passengerBogies.add(new Bogie("Sleeper", 72));
-        passengerBogies.add(new Bogie("Sleeper", 72)); // Added for UC9 Grouping demonstration
+        passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("AC Chair", 56));
         passengerBogies.add(new Bogie("First Class", 24));
 
@@ -101,13 +101,7 @@ public class TrainApp {
                 .collect(Collectors.toList());
 
         System.out.println("Filtered Bogies (High Capacity Only):");
-        if (filteredBogies.isEmpty()) {
-            System.out.println("No bogies match the criteria.");
-        } else {
-            filteredBogies.forEach(System.out::println);
-        }
-
-        System.out.println("Filtering complete. Original collection remains unchanged.");
+        filteredBogies.forEach(System.out::println);
 
 
         // --- UC9: Group Bogies by Type (Collectors.groupingBy) ---
@@ -117,11 +111,21 @@ public class TrainApp {
                 .collect(Collectors.groupingBy(b -> b.name));
 
         groupedBogies.forEach((type, list) -> {
-            System.out.println("Category: [" + type + "] | Bogies in Group: " + list.size());
-            list.forEach(b -> System.out.println("  -> " + b));
+            System.out.println("Category: [" + type + "] | Count: " + list.size());
         });
 
-        System.out.println("\nGrouping complete. Categorized reporting ready.");
-        System.out.println("Operational planning complete. Program continues...");
+
+        // --- UC10: Count Total Seats in Train (reduce) ---
+        System.out.println("\n--- UC10: Aggregate Total Seating Capacity ---");
+
+        // map() extracts capacity, reduce() sums them up
+        int totalSeatingCapacity = passengerBogies.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
+
+        System.out.println("Total Seating Capacity of the Train: " + totalSeatingCapacity + " seats");
+
+        System.out.println("\nAggregation complete. Quantitative metrics generated.");
+        System.out.println("System finalized. All Use Cases complete.");
     }
 }
