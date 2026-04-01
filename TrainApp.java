@@ -81,6 +81,7 @@ public class TrainApp {
 
         List<Bogie> passengerBogies = new ArrayList<>();
         passengerBogies.add(new Bogie("Sleeper", 72));
+        passengerBogies.add(new Bogie("Sleeper", 72)); // Added for UC9 Grouping demonstration
         passengerBogies.add(new Bogie("AC Chair", 56));
         passengerBogies.add(new Bogie("First Class", 24));
 
@@ -106,7 +107,21 @@ public class TrainApp {
             filteredBogies.forEach(System.out::println);
         }
 
-        System.out.println("\nFiltering complete. Original collection remains unchanged.");
+        System.out.println("Filtering complete. Original collection remains unchanged.");
+
+
+        // --- UC9: Group Bogies by Type (Collectors.groupingBy) ---
+        System.out.println("\n--- UC9: Grouping Bogies by Category ---");
+
+        Map<String, List<Bogie>> groupedBogies = passengerBogies.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
+
+        groupedBogies.forEach((type, list) -> {
+            System.out.println("Category: [" + type + "] | Bogies in Group: " + list.size());
+            list.forEach(b -> System.out.println("  -> " + b));
+        });
+
+        System.out.println("\nGrouping complete. Categorized reporting ready.");
         System.out.println("Operational planning complete. Program continues...");
     }
 }
