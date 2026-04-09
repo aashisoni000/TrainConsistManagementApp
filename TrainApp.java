@@ -162,15 +162,37 @@ public class TrainApp {
         goodsBogies.add(new GoodsBogie("Rectangular", "Coal"));
         goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
 
-        // Safety Rule: If Type is Cylindrical, Cargo MUST be Petroleum
         boolean isSafe = goodsBogies.stream()
                 .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
 
         if (isSafe) {
-            System.out.println("Train Safety Check: PASSED. All goods bogies are compliant.");
+            System.out.println("Train Safety Check: PASSED.");
         } else {
-            System.out.println("Train Safety Check: FAILED. High-risk cargo detected in Cylindrical bogie!");
+            System.out.println("Train Safety Check: FAILED.");
         }
+
+
+        // --- UC13: Performance Comparison (Loops vs Streams) ---
+        System.out.println("\n--- UC13: Performance Benchmarking (Loops vs Streams) ---");
+        
+        // Benchmarking Loop
+        long startLoop = System.nanoTime();
+        List<Bogie> loopFiltered = new ArrayList<>();
+        for (Bogie b : passengerBogies) {
+            if (b.capacity > 60) {
+                loopFiltered.add(b);
+            }
+        }
+        long endLoop = System.nanoTime();
+        System.out.println("Loop Execution Time: " + (endLoop - startLoop) + " ns");
+
+        // Benchmarking Stream
+        long startStream = System.nanoTime();
+        List<Bogie> streamFiltered = passengerBogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+        long endStream = System.nanoTime();
+        System.out.println("Stream Execution Time: " + (endStream - startStream) + " ns");
 
 
         System.out.println("\nAggregation complete. Quantitative metrics generated.");
