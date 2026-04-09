@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 // UC7: Supporting Class for Object-based collection handling
@@ -118,12 +120,37 @@ public class TrainApp {
         // --- UC10: Count Total Seats in Train (reduce) ---
         System.out.println("\n--- UC10: Aggregate Total Seating Capacity ---");
 
-        // map() extracts capacity, reduce() sums them up
         int totalSeatingCapacity = passengerBogies.stream()
                 .map(b -> b.capacity)
                 .reduce(0, Integer::sum);
 
         System.out.println("Total Seating Capacity of the Train: " + totalSeatingCapacity + " seats");
+
+
+        // --- UC11: Validate Train ID & Cargo Codes (Regex) ---
+        System.out.println("\n--- UC11: Validate Train ID & Cargo Codes (Regex) ---");
+
+        String trainIdInput = "TRN-1234";
+        String cargoCodeInput = "PET-AB";
+
+        Pattern trainIdPattern = Pattern.compile("TRN-\\d{4}");
+        Pattern cargoCodePattern = Pattern.compile("PET-[A-Z]{2}");
+
+        Matcher trainIdMatcher = trainIdPattern.matcher(trainIdInput);
+        Matcher cargoCodeMatcher = cargoCodePattern.matcher(cargoCodeInput);
+
+        if (trainIdMatcher.matches()) {
+            System.out.println("Valid Train ID: " + trainIdInput);
+        } else {
+            System.out.println("Invalid Train ID: " + trainIdInput);
+        }
+
+        if (cargoCodeMatcher.matches()) {
+            System.out.println("Valid Cargo Code: " + cargoCodeInput);
+        } else {
+            System.out.println("Invalid Cargo Code: " + cargoCodeInput);
+        }
+
 
         System.out.println("\nAggregation complete. Quantitative metrics generated.");
         System.out.println("System finalized. All Use Cases complete.");
