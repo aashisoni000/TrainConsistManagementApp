@@ -3,7 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-// UC7: Supporting Class for Object-based collection handling
+// UC7: Supporting Class for Passenger bogies
 class Bogie {
     String name;
     int capacity;
@@ -16,6 +16,22 @@ class Bogie {
     @Override
     public String toString() {
         return "Bogie: " + name + " (Capacity: " + capacity + ")";
+    }
+}
+
+// UC12: Supporting Class for Goods bogies
+class GoodsBogie {
+    String type;
+    String cargo;
+
+    GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
+    }
+
+    @Override
+    public String toString() {
+        return "GoodsBogie: " + type + " [Cargo: " + cargo + "]";
     }
 }
 
@@ -80,7 +96,6 @@ public class TrainApp {
 
         // --- UC7: Sort Bogies by Capacity (Comparator) ---
         System.out.println("\n--- UC7: Sorting Bogies by Capacity (Comparator) ---");
-
         List<Bogie> passengerBogies = new ArrayList<>();
         passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("Sleeper", 72));
@@ -88,27 +103,21 @@ public class TrainApp {
         passengerBogies.add(new Bogie("First Class", 24));
 
         passengerBogies.sort(Comparator.comparingInt(b -> b.capacity));
-
         System.out.println("Bogies Sorted by Capacity (Low to High):");
-        for (Bogie b : passengerBogies) {
-            System.out.println(b);
-        }
+        passengerBogies.forEach(System.out::println);
 
 
         // --- UC8: Filter Passenger Bogies Using Streams ---
         System.out.println("\n--- UC8: Filter Bogies (Capacity > 60) Using Streams ---");
-
         List<Bogie> filteredBogies = passengerBogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
-
         System.out.println("Filtered Bogies (High Capacity Only):");
         filteredBogies.forEach(System.out::println);
 
 
         // --- UC9: Group Bogies by Type (Collectors.groupingBy) ---
         System.out.println("\n--- UC9: Grouping Bogies by Category ---");
-
         Map<String, List<Bogie>> groupedBogies = passengerBogies.stream()
                 .collect(Collectors.groupingBy(b -> b.name));
 
@@ -119,37 +128,50 @@ public class TrainApp {
 
         // --- UC10: Count Total Seats in Train (reduce) ---
         System.out.println("\n--- UC10: Aggregate Total Seating Capacity ---");
-
         int totalSeatingCapacity = passengerBogies.stream()
                 .map(b -> b.capacity)
                 .reduce(0, Integer::sum);
-
         System.out.println("Total Seating Capacity of the Train: " + totalSeatingCapacity + " seats");
 
 
         // --- UC11: Validate Train ID & Cargo Codes (Regex) ---
         System.out.println("\n--- UC11: Validate Train ID & Cargo Codes (Regex) ---");
-
         String trainIdInput = "TRN-1234";
         String cargoCodeInput = "PET-AB";
 
         Pattern trainIdPattern = Pattern.compile("TRN-\\d{4}");
         Pattern cargoCodePattern = Pattern.compile("PET-[A-Z]{2}");
 
-        Matcher trainIdMatcher = trainIdPattern.matcher(trainIdInput);
-        Matcher cargoCodeMatcher = cargoCodePattern.matcher(cargoCodeInput);
-
-        if (trainIdMatcher.matches()) {
+        if (trainIdPattern.matcher(trainIdInput).matches()) {
             System.out.println("Valid Train ID: " + trainIdInput);
         } else {
             System.out.println("Invalid Train ID: " + trainIdInput);
         }
 
-        if (cargoCodeMatcher.matches()) {
+        if (cargoCodePattern.matcher(cargoCodeInput).matches()) {
             System.out.println("Valid Cargo Code: " + cargoCodeInput);
         } else {
             System.out.println("Invalid Cargo Code: " + cargoCodeInput);
         }
+
+
+        // --- UC12: Safety Compliance Check for Goods Bogies ---
+        System.out.println("\n--- UC12: Enforcing Safety Rules (allMatch) ---");
+        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsBogies.add(new GoodsBogie("Rectangular", "Coal"));
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+
+        // Safety Rule: If Type is Cylindrical, Cargo MUST be Petroleum
+        boolean isSafe = goodsBogies.stream()
+                .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+
+        if (isSafe) {
+            System.out.println("Train Safety Check: PASSED. All goods bogies are compliant.");
+        } else {
+            System.out.println("Train Safety Check: FAILED. High-risk cargo detected in Cylindrical bogie!");
+        }
+
 
         System.out.println("\nAggregation complete. Quantitative metrics generated.");
         System.out.println("System finalized. All Use Cases complete.");
