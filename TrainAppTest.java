@@ -304,4 +304,35 @@ public class TrainAppTest {
             System.out.println("testException_ExceptionMessageValidation: " + (passed ? "PASSED" : "FAILED"));
         }
     }
+
+     public static void runUC15Tests() {
+        System.out.println("\n--- Running UC15 Safe Cargo Assignment Tests ---");
+        testCargo_SafeAssignment();
+        testCargo_UnsafeAssignmentHandled();
+        testCargo_FinallyBlockExecution();
+    }
+
+    // --- UC15 Test Methods ---
+    static void testCargo_SafeAssignment() {
+        GoodsBogie bogie = new GoodsBogie("Cylindrical");
+        try {
+            bogie.assignCargo("Petroleum");
+            System.out.println("testCargo_SafeAssignment: PASSED");
+        } catch (Exception e) {
+            System.out.println("testCargo_SafeAssignment: FAILED");
+        }
+    }
+
+    static void testCargo_UnsafeAssignmentHandled() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+        boolean passed = (bogie.cargo == null); 
+        System.out.println("testCargo_UnsafeAssignmentHandled: " + (passed ? "PASSED" : "FAILED"));
+    }
+
+    static void testCargo_FinallyBlockExecution() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+        System.out.println("testCargo_FinallyBlockExecution: PASSED (Program continued)");
+    }
 }
