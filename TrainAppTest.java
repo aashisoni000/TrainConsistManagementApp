@@ -183,4 +183,82 @@ public class TrainAppTest {
         original.stream().map(b -> b.capacity).reduce(0, Integer::sum);
         System.out.println("testReduce_OriginalListUnchanged: " + (original.size() == 1 ? "PASSED" : "FAILED"));
     }
+
+    public static void runUC11Tests() {
+        System.out.println("\n--- Running UC11 Regex Validation Tests ---");
+        testRegex_ValidTrainID();
+        testRegex_InvalidTrainID();
+        testRegex_ValidCargoCode();
+        testRegex_InvalidCargoCode();
+    }
+
+    public static void runUC12Tests() {
+        System.out.println("\n--- Running UC12 Safety Compliance Tests ---");
+        testSafety_AllBogiesValid();
+        testSafety_CylindricalWithInvalidCargo();
+        testSafety_EmptyBogieList();
+    }
+
+    public static void runUC13Tests() {
+        System.out.println("\n--- Running UC13 Performance Comparison Tests ---");
+        testLoopAndStreamResultsMatch();
+        testExecutionTimeMeasurement();
+    }
+
+    // --- UC11 Test Methods ---
+    static void testRegex_ValidTrainID() {
+        boolean match = Pattern.compile("TRN-\\d{4}").matcher("TRN-1234").matches();
+        System.out.println("testRegex_ValidTrainID: " + (match ? "PASSED" : "FAILED"));
+    }
+
+    static void testRegex_InvalidTrainID() {
+        boolean match = Pattern.compile("TRN-\\d{4}").matcher("TRAIN12").matches();
+        System.out.println("testRegex_InvalidTrainID: " + (!match ? "PASSED" : "FAILED"));
+    }
+
+    static void testRegex_ValidCargoCode() {
+        boolean match = Pattern.compile("PET-[A-Z]{2}").matcher("PET-AB").matches();
+        System.out.println("testRegex_ValidCargoCode: " + (match ? "PASSED" : "FAILED"));
+    }
+
+    static void testRegex_InvalidCargoCode() {
+        boolean match = Pattern.compile("PET-[A-Z]{2}").matcher("PET-ab").matches();
+        System.out.println("testRegex_InvalidCargoCode: " + (!match ? "PASSED" : "FAILED"));
+    }
+
+    // --- UC12 Test Methods ---
+    static void testSafety_AllBogiesValid() {
+        List<GoodsBogie> list = Arrays.asList(new GoodsBogie("Cylindrical", "Petroleum"), new GoodsBogie("Box", "Coal"));
+        boolean isSafe = list.stream().allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+        System.out.println("testSafety_AllBogiesValid: " + (isSafe ? "PASSED" : "FAILED"));
+    }
+
+    static void testSafety_CylindricalWithInvalidCargo() {
+        List<GoodsBogie> list = Arrays.asList(new GoodsBogie("Cylindrical", "Coal"));
+        boolean isSafe = list.stream().allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+        System.out.println("testSafety_CylindricalWithInvalidCargo: " + (!isSafe ? "PASSED" : "FAILED"));
+    }
+
+    static void testSafety_EmptyBogieList() {
+        List<GoodsBogie> list = new ArrayList<>();
+        boolean isSafe = list.stream().allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+        System.out.println("testSafety_EmptyBogieList: " + (isSafe ? "PASSED" : "FAILED"));
+    }
+
+    // --- UC13 Test Methods ---
+    static void testLoopAndStreamResultsMatch() {
+        List<Bogie> list = Arrays.asList(new Bogie("Sleeper", 72), new Bogie("AC", 50));
+        List<Bogie> loopRes = new ArrayList<>();
+        for (Bogie b : list) if (b.capacity > 60) loopRes.add(b);
+        List<Bogie> streamRes = list.stream().filter(b -> b.capacity > 60).collect(Collectors.toList());
+        System.out.println("testLoopAndStreamResultsMatch: " + (loopRes.size() == streamRes.size() ? "PASSED" : "FAILED"));
+    }
+
+    static void testExecutionTimeMeasurement() {
+        long start = System.nanoTime();
+        // dummy work
+        for(int i=0; i<100; i++);
+        long end = System.nanoTime();
+        System.out.println("testExecutionTimeMeasurement: " + (end - start > 0 ? "PASSED" : "FAILED"));
+    }
 }
