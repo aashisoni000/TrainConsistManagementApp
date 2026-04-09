@@ -261,4 +261,47 @@ public class TrainAppTest {
         long end = System.nanoTime();
         System.out.println("testExecutionTimeMeasurement: " + (end - start > 0 ? "PASSED" : "FAILED"));
     }
+       public static void runUC14Tests() {
+        System.out.println("\n--- Running UC14 Custom Exception Tests ---");
+        testException_ValidCapacityCreation();
+        testException_NegativeCapacityThrowsException();
+        testException_ZeroCapacityThrowsException();
+        testException_ExceptionMessageValidation();
+    }
+
+    static void testException_ValidCapacityCreation() {
+        try {
+            Bogie b = new Bogie("Sleeper", 72);
+            System.out.println("testException_ValidCapacityCreation: PASSED");
+        } catch (InvalidCapacityException e) {
+            System.out.println("testException_ValidCapacityCreation: FAILED");
+        }
+    }
+
+    static void testException_NegativeCapacityThrowsException() {
+        try {
+            new Bogie("Sleeper", -10);
+            System.out.println("testException_NegativeCapacityThrowsException: FAILED");
+        } catch (InvalidCapacityException e) {
+            System.out.println("testException_NegativeCapacityThrowsException: PASSED");
+        }
+    }
+
+    static void testException_ZeroCapacityThrowsException() {
+        try {
+            new Bogie("Sleeper", 0);
+            System.out.println("testException_ZeroCapacityThrowsException: FAILED");
+        } catch (InvalidCapacityException e) {
+            System.out.println("testException_ZeroCapacityThrowsException: PASSED");
+        }
+    }
+
+    static void testException_ExceptionMessageValidation() {
+        try {
+            new Bogie("Sleeper", -5);
+        } catch (InvalidCapacityException e) {
+            boolean passed = e.getMessage().equals("Capacity must be greater than zero");
+            System.out.println("testException_ExceptionMessageValidation: " + (passed ? "PASSED" : "FAILED"));
+        }
+    }
 }
