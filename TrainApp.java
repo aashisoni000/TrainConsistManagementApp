@@ -151,7 +151,6 @@ public class TrainApp {
             System.out.println("Invalid Cargo Code: " + cargoCodeInput);
         }
 
-
         System.out.println("\nAggregation complete. Quantitative metrics generated.");
         System.out.println("System finalized. All Use Cases complete.");
     }
